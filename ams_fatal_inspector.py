@@ -58,6 +58,7 @@ class AmsFatalInspectorGui(idaapi.PluginForm):
         self.log_txt.setEnabled(False)
 
         self.stack_trace_table = QtWidgets.QTableWidget()
+        self.stack_trace_table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.stack_trace_table.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.stack_trace_table.horizontalHeader().setStretchLastSection(True)
         self.stack_trace_table.setFont(font)
