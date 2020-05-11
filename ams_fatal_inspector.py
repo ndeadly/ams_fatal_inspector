@@ -104,7 +104,7 @@ class AmsFatalInspectorGui(idaapi.PluginForm):
 class AmsFatalInspector(idaapi.plugin_t):
     flags = 0
     wanted_name = "Atmosphère fatal report inspector"
-    wanted_hotkey = "Alt + F"
+    wanted_hotkey = "Ctrl+Alt+A"
     comment = "Load an Atmosphère fatal report for easy jumping between traceback addresses"
     help = ""
 
