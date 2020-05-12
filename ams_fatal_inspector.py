@@ -4,6 +4,7 @@ import idc
 import idaapi
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sip
+from itanium_demangler import parse as demangle
 
 
 def process_stack_trace(log):
@@ -90,9 +91,13 @@ class AmsFatalInspectorGui(idaapi.PluginForm):
         self.stack_trace_table.setHorizontalHeaderLabels(["Address", "Function"])
         self.stack_trace_table.setRowCount(len(traceback))
         for i, addr in enumerate(traceback):
+            func_name = idc.GetFunctionName(addr)
+            func_name_demangled = demangle(func_name)
+            if func_name_demangled is not None:
+                func_name = str(func_name_demangled)
             self.stack_trace_table.setRowHeight(i, 20)
             self.stack_trace_table.setItem(i, 0, QtWidgets.QTableWidgetItem("0x{:016x}".format(addr)))
-            self.stack_trace_table.setItem(i, 1, QtWidgets.QTableWidgetItem(idc.GetFunctionName(addr)))
+            self.stack_trace_table.setItem(i, 1, QtWidgets.QTableWidgetItem(func_name))
 
         self.log_txt.setEnabled(True)
         self.stack_trace_table.setEnabled(True)
@@ -106,7 +111,7 @@ class AmsFatalInspector(idaapi.plugin_t):
     flags = 0
     wanted_name = "Atmosphère fatal report inspector"
     wanted_hotkey = "Ctrl+Alt+A"
-    comment = "Load an Atmosphère fatal report for easy jumping between traceback addresses"
+    comment = "Load an Atmosphère fatal report for easy navigation between traceback addresses"
     help = ""
 
     def init(self):
