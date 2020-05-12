@@ -4,7 +4,6 @@ import idc
 import idaapi
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sip
-from itanium_demangler import parse as demangle
 
 
 def process_stack_trace(log):
@@ -92,9 +91,9 @@ class AmsFatalInspectorGui(idaapi.PluginForm):
         self.stack_trace_table.setRowCount(len(traceback))
         for i, addr in enumerate(traceback):
             func_name = idc.GetFunctionName(addr)
-            func_name_demangled = demangle(func_name)
+            func_name_demangled = idc.Demangle(func_name, idc.GetLongPrm(idc.INF_SHORT_DN))
             if func_name_demangled is not None:
-                func_name = str(func_name_demangled)
+                func_name = func_name_demangled
             self.stack_trace_table.setRowHeight(i, 20)
             self.stack_trace_table.setItem(i, 0, QtWidgets.QTableWidgetItem("0x{:016x}".format(addr)))
             self.stack_trace_table.setItem(i, 1, QtWidgets.QTableWidgetItem(func_name))
